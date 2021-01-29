@@ -1,0 +1,19 @@
+{
+  "name": "badge-it",
+  "version": "0.1.0",
+  "description": "A user-friendly, reliable and easy to use GitHub statistic badge",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Badge it !!!",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security"
+  }
+}

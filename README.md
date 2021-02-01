@@ -1,2 +1,2 @@
 # Badge it !!!
-A user-friendly, reliable and easy to use GitHub statistic badge. Currently under early development progress.
+A user-friendly, reliable and easy to use GitHub Statistic Badges. This project currently under early development progress.

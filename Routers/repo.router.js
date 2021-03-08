@@ -8,7 +8,7 @@ router.get('/:user/:repo/', async (req, res) => {
     const repository = req.params.repo;
     let data = {}
     await Axios.get(`https://api.github.com/repos/${user}/${repository}`)
-    .then(result => {
+    .then(async result => {
         data.name = result.data.name;
         data.description = result.data.description;
         data.size = result.data.size;
@@ -21,21 +21,25 @@ router.get('/:user/:repo/', async (req, res) => {
         .catch(err => console.log(err))
         data.stars = result.data.stargazers_count;
         data.forks = result.data.forks_count;
-        data.openIssues = result.data.open_issues_count;
         data.watchers = result.data.subscribers_count;
         data.closedIssues = 0;
-        await Axios.get(`https://api.github.com/search/issue?q=repo:${user}/${repo}+type:issue+state:closed`)
+        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repository}+type:issue`)
+        .then(totalIssues => data.totalIssues = totalIssues.data.total_count)
+        .catch(err => console.log(err))
+        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repository}+type:issue+state:closed`)
         .then(closedIssues => data.closedIssues = closedIssues.data.total_count)
         .catch(err => console.log(err))
-        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repo}+type:pr`)
+        data.openIssues = data.totalIssues - data.closedIssues
+        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repository}+type:pr`)
         .then(totalPR => data.totalPulls = totalPR.data.total_count)
         .catch(err => console.log(err))
-        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repo}+type:pr+state:closed`)
+        await Axios.get(`https://api.github.com/search/issues?q=repo:${user}/${repository}+type:pr+state:closed`)
         .then(closedPR => data.closedPulls = closedPR.data.total_count)
         .catch(err => console.log(err))
+        data.openPulls = data.totalPulls - data.closedPulls
         res.json(data)
     })
-    .catch(err => result.status(err.response.status).json(err.response.statusText))
+    .catch(err => res.status(err.response.status).json(err.response.statusText))
 })
 
 router.get('/:user/:repo/:options', async (req,res) => {
